@@ -1,0 +1,36 @@
+{
+    "name": "reynevan/cli-options",
+    "description": "Tiny, dependency-free CLI options parser for PHP: long/short options, flags, --key=value, combined short flags, typed defaults.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["cli", "options", "argv", "arguments", "parser", "getopt"],
+    "autoload": {
+        "psr-4": {
+            "Reynevan\\CliOptions\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Reynevan\\CliOptions\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Paweł Sumiński",
+            "email": "p.suminski@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.4"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^4.0",
+        "phpstan/phpstan": "^2.2",
+        "phpunit/phpunit": "^13.3"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "cs": "phpcs",
+        "stan": "phpstan analyse"
+    }
+}

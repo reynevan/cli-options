@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="cli-options">
+    <description>PSR-12 for src/ and tests/.</description>
+
+    <file>src</file>
+    <file>tests</file>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
+    <arg name="colors"/>
+    <arg name="basepath" value="."/>
+    <arg value="p"/>
+
+    <rule ref="PSR12"/>
+</ruleset>
