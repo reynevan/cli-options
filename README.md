@@ -3,8 +3,8 @@
 Tiny, dependency-free command-line options parser for PHP 8.4+.
 
 It does one thing: turns `$argv` into a set of typed values based on a list of
-option definitions. No commands, no sub-commands, no help generation — just
-options.
+option definitions, and can print a plain usage/help listing for them. No
+commands, no sub-commands — just options.
 
 ## Installation
 
@@ -63,6 +63,7 @@ new Option(
     default: 5353,          // value when the option is absent; also drives type casting
     description: '...',     // free text, for your own help output
     isFlag: false,          // true → option takes no value and yields bool(true)
+    valueName: 'port',      // placeholder in help output: "-p/--port <port>" (default: "value")
 );
 ```
 
@@ -71,6 +72,32 @@ Values are cast to the type of the default: `int`, `float` and `bool`
 
 `Options::parse()` skips `$argv[0]` (the script name). An unknown option throws
 `InvalidOptionException`.
+
+### Help output
+
+```php
+use Reynevan\CliOptions\Help;
+
+$help = new Help('php index.php [options]', $definitions, 'php index.php -p 53 -a 127.0.0.1');
+
+if ($options->get('help')) {
+    $help->print();   // or: echo $help->render();
+    exit(0);
+}
+```
+
+prints:
+
+```
+Usage: php index.php [options]
+OPTIONS
+  -p/--port <port>: Port to listen on
+  -a/--address <value>: Bind address
+  -v/--verbose: Verbose output
+  -h/--help: Show help
+EXAMPLE:
+  php index.php -p 53 -a 127.0.0.1
+```
 
 ## Development
 

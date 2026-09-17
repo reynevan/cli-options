@@ -10,6 +10,7 @@ readonly class Option
         private mixed $default = null,
         private ?string $description = null,
         private bool $isFlag = false,
+        private string $valueName = 'value',
     ) {
     }
 
@@ -36,5 +37,13 @@ readonly class Option
     public function isFlag(): bool
     {
         return $this->isFlag;
+    }
+
+    /**
+     * Placeholder shown in help output for the option's value, e.g. "port" in "-p/--port <port>".
+     */
+    public function getValueName(): string
+    {
+        return $this->valueName;
     }
 }
