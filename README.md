@@ -3,8 +3,8 @@
 Tiny, dependency-free command-line options parser for PHP 8.4+.
 
 It does one thing: turns `$argv` into a set of typed values based on a list of
-option definitions, and can print a plain usage/help listing for them. No
-commands, no sub-commands — just options.
+option definitions plus any leftover positional arguments, and can print a plain
+usage/help listing for them. No commands, no sub-commands — just options.
 
 ## Installation
 
@@ -40,6 +40,7 @@ try {
 $options->get('port');    // int(53)    for "-p 53", "-p53" or "--port=53"
 $options->get('address'); // string     defaults to "0.0.0.0"
 $options->get('verbose'); // bool(true) when "-v" or "--verbose" is present
+$options->getArgs();      // string[]   positional arguments, e.g. file names
 ```
 
 ### Supported syntax
@@ -53,6 +54,8 @@ $options->get('verbose'); // bool(true) when "-v" or "--verbose" is present
 | flag                | `-v`, `--verbose`    |
 | combined flags      | `-hv`                |
 | flags + value       | `-hp 53`, `-hp53`    |
+| positional argument | `file.txt`, `-`      |
+| end of options      | `--`                 |
 
 ### Option definition
 
@@ -72,6 +75,33 @@ Values are cast to the type of the default: `int`, `float` and `bool`
 
 `Options::parse()` skips `$argv[0]` (the script name). An unknown option throws
 `InvalidOptionException`.
+
+### Positional arguments
+
+Anything that is neither an option nor an option's value is collected as a
+positional argument, in the order it appeared:
+
+```php
+// php index.php -p 1 -h arg1 arg2
+$options->get('port');    // int(1)
+$options->get('help');    // bool(true)
+$options->getArgs();      // ['arg1', 'arg2']
+$options->getArg(0);      // 'arg1'   (null when out of range)
+```
+
+Positional arguments may appear anywhere, including before or between options
+(`index.php first -p 53 second`). A lone `-` is treated as an argument, since it
+conventionally stands for stdin.
+
+Everything after a `--` separator is taken as a positional argument verbatim,
+even if it looks like an option:
+
+```php
+// php index.php -v -- --port=53 arg1
+$options->get('verbose'); // bool(true)
+$options->get('port');    // int(5353) — the default
+$options->getArgs();      // ['--port=53', 'arg1']
+```
 
 ### Help output
 
